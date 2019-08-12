@@ -1,6 +1,5 @@
 package thread;
-
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

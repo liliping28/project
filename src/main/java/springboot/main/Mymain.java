@@ -1,5 +1,6 @@
 package springboot.main;
 
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 //默认情况下是加载和Application类所在同一个目录下的所有类，包括所有子目录下的类
 @ComponentScan(basePackages = {"springboot"})
 @MapperScan(basePackages = {"springboot.repository"})
+@EnableAdminServer
 @SpringBootApplication
 public class Mymain {
     public static void main(String[] args) {

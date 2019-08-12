@@ -6,6 +6,16 @@ spring:
     url: jdbc:mysql://localhost:3306/mysql?useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: root
     password: liliping
+  #springboot2.1对应的是es6,和公司目前用的是不一样的所以配置
+  #data:
+    #elasticsearch:
+      #cluster-name: es-5.6.14
+      #cluster-nodes: 192.168.52.38:9300
 logging:
   level:
     springboot.repository: debug
+management:
+  endpoint:
+    health:
+      show-details: always
+

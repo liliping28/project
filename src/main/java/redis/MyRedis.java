@@ -1,13 +1,10 @@
 package redis;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.scheduling.annotation.Async;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
-
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MyRedis {
