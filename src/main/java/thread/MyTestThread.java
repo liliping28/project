@@ -1,6 +1,9 @@
 package thread;
+import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -11,13 +14,14 @@ public class MyTestThread {
      */
     @Test
     public  void myTestThread(){
+        //counter.increment();
         //Counter c = new ReentrantLockCounter();
         //Counter c = new SynchronizedCounter();
        Counter c = new AtomicCounter();
         //打印的目标值
         int increments  = 100000;
         //线程数
-        int threads = 10000;
+        int threads = 4000;
         ExecutorService pool = Executors.newFixedThreadPool(threads);
         for(int i=0;i<threads;i++){
             pool.submit(new CounterThread(c , increments));

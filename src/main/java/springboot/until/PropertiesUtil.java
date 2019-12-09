@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -25,6 +26,7 @@ public class PropertiesUtil {
 	static {
 		loadProperties();
 		loadYml();
+		System.out.println(prop);
 	}
 
 	/**
@@ -38,9 +40,7 @@ public class PropertiesUtil {
 			synchronized (prop){
 				for(Resource resource:resources){
 					in = resource.getInputStream();
-					//获取编码格式
-					String code = codeString(in);
-					prop.load(new InputStreamReader(in, code));
+					prop.load(new InputStreamReader(in, "utf-8"));
 				}
 			}
 		} catch (IOException e) {
@@ -86,9 +86,7 @@ public class PropertiesUtil {
 							value = parser.getText();
 							String s = key + "=" + value;
 							in = new ByteArrayInputStream(s.getBytes());
-							//获取编码格式
-							String code = codeString(in);
-							prop.load(new InputStreamReader(in, code));
+							prop.load(new InputStreamReader(in, "utf-8"));
 							int dotOffset = key.lastIndexOf(DOT);
 							if (dotOffset > 0) {
 								key = key.substring(0, dotOffset);
@@ -107,33 +105,56 @@ public class PropertiesUtil {
 			throw new RuntimeException(e);
 		} finally {
 			if(null != in) {
-				IOUtils.closeQuietly(in);
+				org.apache.tomcat.util.http.fileupload.IOUtils.closeQuietly(in);
 			}
-			IOUtils.closeQuietly(parser);
+			org.apache.tomcat.util.http.fileupload.IOUtils.closeQuietly(parser);
 		}
 	}
-	/**
-	 * 判断文件的编码格式
-	 * @param  in 输入流
-	 * @return 文件编码格式
-	 * @throws Exception
-	 */
-	public static String codeString(InputStream in) throws Exception{
-		int p = (in.read() << 8) + in.read();
-		String code = null;
-		switch (p) {
-			case 0xefbb:
-				code = "UTF-8";
-				break;
-			case 0xfffe:
-				code = "Unicode";
-				break;
-			case 0xfeff:
-				code = "UTF-16BE";
-				break;
-			default:
-				code = "GBK";
+	public static Properties loadHadoop(){
+		Properties prop = new Properties();
+		InputStream in = null;
+		try {
+			Resource resource = new ClassPathResource("hadoop.properties");
+			in = resource.getInputStream();
+			prop.load(in);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(null != in) {
+					in.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return code;
+		return prop;
+	}
+
+	/**
+	 * 获取资源文件内容
+	 *
+	 * @param fileName 文件名字（resource下的文件名字）
+	 * @return
+	 */
+	public static Properties loadProperties(String fileName){
+		Properties prop = new Properties();
+		InputStream in = null;
+		try {
+			Resource resource = new ClassPathResource(fileName);
+			in = resource.getInputStream();
+			prop.load(in);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(null != in) {
+					in.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return prop;
 	}
 }
