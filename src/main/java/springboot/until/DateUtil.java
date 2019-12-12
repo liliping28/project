@@ -1,12 +1,12 @@
 package springboot.until;
 
+import io.micrometer.core.instrument.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
@@ -142,6 +142,7 @@ public class DateUtil {
     public static final String DATE_FMT_16 = "yyyyMMddHHmm";
     public static final String DATE_FMT_17 = "HHmmss";
     public static final String DATE_FMT_18 = "yyyy";
+
     /**
      * date format yyyy-MM-dd HH:mm:ss
      */
@@ -155,15 +156,9 @@ public class DateUtil {
      * @param format        例：yyyy-MM-dd hh:mm:ss
      * @return
      */
-    public static String formatLocalDateTimeToString(LocalDateTime localDateTime, String format) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-            return localDateTime.format(formatter);
-
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static String formatLocalDateTimeToString(LocalDateTime localDateTime, String format) throws  Exception{
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return localDateTime.format(formatter);
     }
 
     /**
@@ -173,14 +168,9 @@ public class DateUtil {
      * @param format  例："yyyy-MM-dd HH:mm:ss"
      * @return
      */
-    public static LocalDateTime stringToLocalDateTime(String dateStr, String format) {
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-            return LocalDateTime.parse(dateStr, formatter);
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static LocalDateTime stringToLocalDateTime(String dateStr, String format) throws  Exception{
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return LocalDateTime.parse(dateStr, formatter);
     }
 
 
@@ -342,7 +332,7 @@ public class DateUtil {
      * @param date
      * @param customTime 必须为"hh:mm:ss"这种格式
      */
-    public static LocalDateTime reserveDateCustomTime(Date date, String customTime) {
+    public static LocalDateTime reserveDateCustomTime(Date date, String customTime) throws Exception{
         String dateStr = dateToLocalDate(date).toString() + " " + customTime;
         return stringToLocalDateTime(dateStr, "yyyy-MM-dd HH:mm:ss");
     }
@@ -353,7 +343,7 @@ public class DateUtil {
      * @param date
      * @param customTime 必须为"hh:mm:ss"这种格式
      */
-    public static LocalDateTime reserveDateCustomTime(Timestamp date, String customTime) {
+    public static LocalDateTime reserveDateCustomTime(Timestamp date, String customTime) throws Exception{
         String dateStr = timestampToLocalDate(date).toString() + " " + customTime;
         return stringToLocalDateTime(dateStr, "yyyy-MM-dd HH:mm:ss");
     }
@@ -589,4 +579,36 @@ public class DateUtil {
         return (start.isBefore(now) && end.isAfter(now)) || start.isEqual(now) || end.isEqual(now);
     }
 
+    /**
+     * Date转成日期StringDate
+     *
+     * @param date 日期
+     * @param format 日期格式 可以为空，默认时间格式yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public  static  String format(Date date, String format) throws  Exception{
+        SimpleDateFormat simpleDateFormat = null;
+        if(StringUtils.isNotBlank(format)){
+            simpleDateFormat = new SimpleDateFormat(format);
+        }else{
+            simpleDateFormat = new SimpleDateFormat(TIME_PATTERN);
+        }
+        return simpleDateFormat.format(date);
+    }
+    /**
+     * StringDate转成日期Date
+     *
+     * @param date String日期格式
+     * @param format 日期格式 可以为空，默认时间格式yyyy-MM-dd HH:mm:ss
+     * @return
+     */
+    public  static  Date parse(String date, String format) throws  Exception{
+        SimpleDateFormat simpleDateFormat = null;
+        if(StringUtils.isNotBlank(format)){
+            simpleDateFormat = new SimpleDateFormat(format);
+        }else{
+            simpleDateFormat = new SimpleDateFormat(TIME_PATTERN);
+        }
+        return simpleDateFormat.parse(date);
+    }
 }
