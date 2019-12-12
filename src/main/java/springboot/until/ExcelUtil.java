@@ -36,6 +36,7 @@ public class ExcelUtil {
 
     /**
      * 外部导入Excel标准目录数据
+     *
      * @param file 导入文件
      * @return List<Map<String, String>>
      */
@@ -45,6 +46,7 @@ public class ExcelUtil {
 
     /**
      * 读取excel到一个sheet
+     *
      * @param fileStream excel文件流
      */
     public static List<Map<String, String>> readExcel(InputStream fileStream) throws Exception {
@@ -53,20 +55,20 @@ public class ExcelUtil {
 
     /**
      * 读取excel到一个sheet
+     *
      * @param fileStream excel文件流
      * @param beginRow 开始读取行数
      */
-    public static List<Map<String, String>> readExcel(InputStream fileStream, Integer beginRow)
-            throws Exception {
+    public static List<Map<String, String>> readExcel(InputStream fileStream, Integer beginRow) throws Exception {
         List<Map<String, String>> list = new ArrayList<>();
         Workbook workbook = WorkbookFactory.create(fileStream);
         int sheetNum = workbook.getNumberOfSheets();
         int lastRow;
         for (int i = 0; i < sheetNum; i++) {
             Sheet sheet = workbook.getSheetAt(i);
-            if (beginRow == DEFAULT_BEGIN_ROW)
+            if (beginRow == DEFAULT_BEGIN_ROW){
                 beginRow = sheet.getFirstRowNum();
-
+            }
             if((lastRow = sheet.getLastRowNum()) == 0 && beginRow == 0){
                 Row row = sheet.getRow(0);
                 if(row == null){
@@ -80,31 +82,31 @@ public class ExcelUtil {
 
     /**
      * 读取excel到多个sheet
+     *
      * @param fileStream excel文件流
      */
-    public static Map<String,List<Map<String, String>>> readExcelFromSheets(InputStream fileStream)
-            throws Exception {
+    public static Map<String,List<Map<String, String>>> readExcelFromSheets(InputStream fileStream) throws Exception {
         return readExcelFromSheets(fileStream, DEFAULT_BEGIN_ROW);
     }
 
     /**
      * 读取excel到多个sheet
+     *
      * @param fileStream excel文件流
      * @param beginRow 开始读取行数
      * @return 返回各个sheet的数据
      * @throws Exception
      */
-    public static Map<String,List<Map<String, String>>> readExcelFromSheets(InputStream fileStream,
-                                                                            Integer beginRow) throws Exception {
+    public static Map<String,List<Map<String, String>>> readExcelFromSheets(InputStream fileStream, Integer beginRow) throws Exception {
         Workbook workbook = WorkbookFactory.create(fileStream);
         Map<String,List<Map<String, String>>> sheetsMap = new HashMap<>();
         int sheetNum = workbook.getNumberOfSheets();
         int lastRow;
         for (int i = 0; i < sheetNum; i++) {
             Sheet sheet = workbook.getSheetAt(i);
-            if (beginRow == DEFAULT_BEGIN_ROW)
+            if (beginRow == DEFAULT_BEGIN_ROW){
                 beginRow = sheet.getFirstRowNum();
-
+            }
             if((lastRow = sheet.getLastRowNum()) == 0 && beginRow == 0){
                 Row row = sheet.getRow(0);
                 if(row == null){
@@ -118,6 +120,7 @@ public class ExcelUtil {
 
     /**
      * 读取excel
+     *
      * @param beginRow 首行
      * @param lastRow 末行
      * @param sheet sheet
@@ -134,8 +137,9 @@ public class ExcelUtil {
             list.add(map);
             for (int k = row.getFirstCellNum(); k < row.getLastCellNum(); k++) {
                 Cell cell = row.getCell(k);
-                if (cell == null)
+                if (cell == null){
                     map.put(String.valueOf(k), EMPTY);
+                }
                 else {
                     map.put(String.valueOf(k), row.getCell(k).toString());
                 }
@@ -146,19 +150,20 @@ public class ExcelUtil {
 
     /**
      * 导出excel表格文件(需要jxl.jar包)
+     *
      * @param list : 数据
      * @param titles : excel第一行名称
      * @param titleCode : Map的key
      * @param fileName : 文件名
      * @param response
      */
-    public static void exportExcelToHtml(List<Map<String, Object>> list, String[] titles, String[] titleCode,
-                                         String fileName, HttpServletResponse response) {
+    public static void exportExcelToHtml(List<Map<String, Object>> list, String[] titles, String[] titleCode, String fileName, HttpServletResponse response) {
         exportExcelToHtml(list,titles,titleCode,fileName,DEFAULT_SHEET_NAME,response);
     }
 
     /**
      * 导出excel表格文件(需要jxl.jar包)
+     *
      * @param list 数据
      * @param titles excel第一行名称
      * @param titleCode Map的key
@@ -180,8 +185,10 @@ public class ExcelUtil {
             os = response.getOutputStream();
             workbook = jxl.Workbook.createWorkbook(os);
             // 创建新的一页
-            WritableSheet sheet = workbook.createSheet(sheetName, 0);//设置页的名字
-            sheet.getSettings().setDefaultColumnWidth(20);//设置默认列宽
+            //设置页的名字
+            WritableSheet sheet = workbook.createSheet(sheetName, 0);
+            //设置默认列宽
+            sheet.getSettings().setDefaultColumnWidth(20);
             for (int i = 0; i < titles.length; i++) {
                 Label label = new Label(i, 0, titles[i]);
                 sheet.addCell(label);
@@ -193,7 +200,8 @@ public class ExcelUtil {
             }
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             // 表格添加数据
-            for (int i = 0; i < list.size(); i++) { // 一行
+            // 一行
+            for (int i = 0; i < list.size(); i++) {
                 Map<String, Object> map = list.get(i);
                 for (int j = 0; j < titles.length; j++) {
                     Label label = null;
@@ -261,6 +269,7 @@ public class ExcelUtil {
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param os 输出流
      */
@@ -270,83 +279,83 @@ public class ExcelUtil {
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param os 输出流
      * @param sheetName sheet名称
      */
-    public static void axleDraw(List<Map<String, String>> dataSource, OutputStream os,
-                                String sheetName){
+    public static void axleDraw(List<Map<String, String>> dataSource, OutputStream os, String sheetName){
         axleDraw(dataSource,null,os,sheetName,new ArrayList<>());
     }
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param os 输出流
      * @param titles 初始表头数据
      */
-    public static void axleDraw(List<Map<String, String>> dataSource, OutputStream os,
-                                List<String[]> titles){
+    public static void axleDraw(List<Map<String, String>> dataSource, OutputStream os, List<String[]> titles){
         axleDraw(dataSource,null,os,DEFAULT_SHEET_NAME,titles);
     }
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param os 输出流
      * @param sheetName sheet名称
      * @param titles 初始表头数据
      */
-    public static void axleDraw(List<Map<String, String>> dataSource, OutputStream os,
-                                String sheetName, List<String[]> titles){
+    public static void axleDraw(List<Map<String, String>> dataSource, OutputStream os, String sheetName, List<String[]> titles){
         axleDraw(dataSource,null,os,sheetName,titles);
     }
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param os 输出流
      */
-    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource,
-                                OutputStream os){
+    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource, OutputStream os){
         axleDraw(dataSource,remarkSource,os,DEFAULT_SHEET_NAME,new ArrayList<>());
     }
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param os 输出流
      * @param sheetName sheet名称
      */
-    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource,
-                                OutputStream os,String sheetName){
+    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource, OutputStream os,String sheetName){
         axleDraw(dataSource,remarkSource,os,sheetName,new ArrayList<>());
     }
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param os 输出流
      * @param titles 初始表头数据
      */
-    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource,
-                                OutputStream os,List<String[]> titles){
+    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource, OutputStream os,List<String[]> titles){
         axleDraw(dataSource,remarkSource,os,DEFAULT_SHEET_NAME,titles);
     }
 
     /**
      * 生成单sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param os 输出流
      * @param sheetName sheet名称
      * @param titles 初始表头数据
      */
-    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource,
-                                OutputStream os, String sheetName, List<String[]> titles){
+    public static void axleDraw(List<Map<String, String>> dataSource,Map<String, Object> remarkSource, OutputStream os, String sheetName, List<String[]> titles){
         Map<String,List<String[]>> titles_map = new HashMap<>();
         titles_map.put(sheetName,titles);
         Map<String,List<Map<String, String>>> dataSource_map = new HashMap<>();
@@ -358,6 +367,7 @@ public class ExcelUtil {
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param os 输出流
      */
@@ -374,12 +384,12 @@ public class ExcelUtil {
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param sheetNames sheet名称
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, OutputStream os,
-                                String[] sheetNames){
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, OutputStream os, String[] sheetNames){
         Map<String,List<String[]>> titles = new HashMap<>();
         for(String sheetName : sheetNames){
             titles.put(sheetName,new ArrayList<>());
@@ -389,35 +399,35 @@ public class ExcelUtil {
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param titles 初始表头数据
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, OutputStream os,
-                                Map<String,List<String[]>> titles){
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, OutputStream os, Map<String,List<String[]>> titles){
         axleDraw(dataSource,null,os,(String[])dataSource.keySet().toArray(),titles);
     }
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param sheetNames sheet名称
      * @param titles 初始表头数据
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, OutputStream os,
-                                String[] sheetNames,Map<String,List<String[]>> titles){
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, OutputStream os, String[] sheetNames,Map<String,List<String[]>> titles){
         axleDraw(dataSource,null,os,sheetNames,titles);
     }
 
     /**
      * 生成单/多sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource,
-                                Map<String,Map<String, Object>> remarkSource, OutputStream os){
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, Map<String,Map<String, Object>> remarkSource, OutputStream os){
         Map<String,List<String[]>> titles = new HashMap<>();
         String[] sheetNames = new String[dataSource.size()];
         int i = 0;
@@ -430,13 +440,13 @@ public class ExcelUtil {
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param sheetNames sheet名称
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource,
-                                Map<String,Map<String, Object>> remarkSource, OutputStream os,
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, Map<String,Map<String, Object>> remarkSource, OutputStream os,
                                 String[] sheetNames){
         Map<String,List<String[]>> titles = new HashMap<>();
         for(String sheetName : sheetNames){
@@ -447,26 +457,26 @@ public class ExcelUtil {
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param titles 初始表头数据
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource,
-                                Map<String,Map<String, Object>> remarkSource, OutputStream os, Map<String,List<String[]>> titles){
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, Map<String,Map<String, Object>> remarkSource, OutputStream os, Map<String,List<String[]>> titles){
         axleDraw(dataSource,remarkSource,os,(String[])dataSource.keySet().toArray(),titles);
     }
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param sheetNames sheet名称
      * @param titles 初始表头数据
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource,
-                                Map<String,Map<String, Object>> remarkSource, OutputStream os, String[] sheetNames,
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, Map<String,Map<String, Object>> remarkSource, OutputStream os, String[] sheetNames,
                                 Map<String,List<String[]>> titles){
         Workbook wb = createWorkbook(sheetNames,titles);
         axleDraw(dataSource,remarkSource,os,wb,titles);
@@ -474,14 +484,14 @@ public class ExcelUtil {
 
     /**
      * 生成多sheet Excel
+     *
      * @param dataSource 源数据
      * @param remarkSource 坐标map
      * @param wb 需要标注的工作簿
      * @param titles 初始表头数据
      * @param os 输出流
      */
-    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource,
-                                Map<String,Map<String, Object>> remarkSource, OutputStream os, Workbook wb,
+    public static void axleDraw(Map<String,List<Map<String, String>>> dataSource, Map<String,Map<String, Object>> remarkSource, OutputStream os, Workbook wb,
                                 Map<String,List<String[]>> titles){
         //OutputStream os = setResponseHeader(response,fileName);
         try {
@@ -494,6 +504,7 @@ public class ExcelUtil {
 
     /**
      * 生成Excel
+     *
      * @param dataSource 无表头源数据
      * @param remarkSource 标记map key: 横坐标,纵坐标  value:错误备注
      * @param os 输出流
@@ -504,7 +515,8 @@ public class ExcelUtil {
     private static void createFixationSheet(Map<String,List<Map<String, String>>> dataSource,
                                             Map<String,Map<String, Object>> remarkSource, OutputStream os, Workbook wb,
                                             Map<String,List<String[]>> titles) throws IOException{
-        CellStyle style = createCellRedStyle(wb); // 样式对象
+        // 样式对象
+        CellStyle style = createCellRedStyle(wb);
         for(String sheetKey : dataSource.keySet()){
             if(!containsSheet(wb,sheetKey)){
                 createSheet(wb,sheetKey);
@@ -540,6 +552,7 @@ public class ExcelUtil {
 
     /**
      * 设置下载response属性
+     *
      * @param response 响应
      * @param fileName 文件名
      * @return OutputStream
@@ -556,6 +569,7 @@ public class ExcelUtil {
 
     /**
      * 创建一个工作簿模板
+     *
      * @return Workbook
      */
     public static Workbook createWorkbook(){
@@ -564,6 +578,7 @@ public class ExcelUtil {
 
     /**
      * 创建一个工作簿模板
+     *
      * @param sheetName sheet名称
      * @return Workbook
      */
@@ -573,6 +588,7 @@ public class ExcelUtil {
 
     /**
      * 创建一个工作簿模板
+     *
      * @param titles 初始表头数据
      * @return Workbook
      */
@@ -582,6 +598,7 @@ public class ExcelUtil {
 
     /**
      * 创建一个工作簿模板
+     *
      * @param sheetName sheet名称
      * @param titles 初始表头数据
      * @return Workbook
@@ -594,6 +611,7 @@ public class ExcelUtil {
 
     /**
      * 创建多个工作簿模板
+     *
      * @param sheetNames sheet名称数组
      * @return Workbook
      */
@@ -607,6 +625,7 @@ public class ExcelUtil {
 
     /**
      * 创建多个工作簿模板
+     *
      * @param titles 初始表头数据
      * @return Workbook
      */
@@ -621,6 +640,7 @@ public class ExcelUtil {
 
     /**
      * 创建多个工作簿模板
+     *
      * @param sheetName sheet名称
      * @param titles 初始表头数据
      * @return Workbook
@@ -635,6 +655,7 @@ public class ExcelUtil {
 
     /**
      * 创建sheet
+     *
      * @param wb 工作簿
      * @param sheetName sheet名称
      */
@@ -644,6 +665,7 @@ public class ExcelUtil {
 
     /**
      * 创建sheet
+     *
      * @param wb 工作簿
      * @param sheetNames sheet名称
      * @param titles 初始表头数据
@@ -680,18 +702,23 @@ public class ExcelUtil {
 
     /**
      * 设置文本框属性——标红
+     *
      * @param wb Excel工作簿
      * @return CellStyle
      */
     private static CellStyle createCellRedStyle(Workbook wb){
-        CellStyle style = wb.createCellStyle(); // 样式对象
-        style.setFillPattern(CellStyle.SOLID_FOREGROUND);// 设置前景填充样式
-        style.setFillForegroundColor(HSSFColor.RED.index);// 前景填充色
+        // 样式对象
+        CellStyle style = wb.createCellStyle();
+        // 设置前景填充样式
+        style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        // 前景填充色
+        style.setFillForegroundColor(HSSFColor.RED.index);
         return style;
     }
 
     /**
      * 设置文本框属性——文本格式
+     *
      * @param wb Excel工作簿
      * @return CellStyle
      */
