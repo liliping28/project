@@ -10,10 +10,11 @@ import java.util.Map;
 public class MyRedis {
     @Test
     public void testRedis(){
-        JedisShardInfo jedisShardInfo = new JedisShardInfo("192.168.0.138",6379);
-        jedisShardInfo.setPassword("liliping");
-        Jedis redis = new Jedis(jedisShardInfo );
-        System.out.println(redis.get("key1"));
+        JedisShardInfo jedisShardInfo = new JedisShardInfo("116.62.109.18",6379);
+        jedisShardInfo.setPassword("test");
+        Jedis redis = new Jedis(jedisShardInfo);
+        String s = redis.clientList();
+        System.out.println(s);
     }
     @Async
     public  void testAsyncMethod(){

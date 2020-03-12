@@ -4,11 +4,15 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.EmbeddedValueResolver;
+import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringValueResolver;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,7 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 @Component
-public class PropertiesUtil {
+public class PropertiesUtil implements EmbeddedValueResolverAware {
 	//创建动态资源加载器
 	private static final ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 	//获取属性对象
@@ -30,6 +34,8 @@ public class PropertiesUtil {
 		loadYml();
 		System.out.println(prop);
 	}
+
+
 
 	/**
 	 * 加载properties格式的文件
@@ -158,5 +164,14 @@ public class PropertiesUtil {
 			}
 		}
 		return prop;
+	}
+	private StringValueResolver stringValueResolver;
+	@Override
+	public void setEmbeddedValueResolver(StringValueResolver stringValueResolver) {
+		this.stringValueResolver = stringValueResolver;
+	}
+	public String getString (String key){
+		StringBuilder name = new StringBuilder("${").append(key).append("}");
+		return stringValueResolver.resolveStringValue(name.toString());
 	}
 }
