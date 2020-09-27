@@ -1,12 +1,10 @@
 package springboot.until;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 /**
  * @ClassName: SerializableUtil
@@ -79,5 +77,10 @@ public class SerializableUtil {
     public static <T>T unSerializable(byte[] bys ,Class<T> clazz){
         return (T)unSerializable(bys);
     }
-
+    /**
+     * 对象拷呗，包括包装类复制
+     */
+    public static Object clone(Serializable t){
+        return  SerializationUtils.clone(t);
+    }
 }
